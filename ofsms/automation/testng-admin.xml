@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ofsms-admin-suite">
+    <listeners>
+        <listener class-name="com.ofsms.tests.TestReportListener"/>
+    </listeners>
+    <test name="ofsms-admin-tests">
+        <groups>
+            <run>
+                <include name="admin"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.ofsms.tests"/>
+        </packages>
+    </test>
+</suite>

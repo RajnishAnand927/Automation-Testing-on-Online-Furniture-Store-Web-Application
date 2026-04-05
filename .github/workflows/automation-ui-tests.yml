@@ -1,0 +1,111 @@
+name: Automation UI Tests
+
+on:
+  push:
+    paths:
+      - '.github/workflows/automation-ui-tests.yml'
+      - 'SQL File/**'
+      - 'ofsms/**'
+  pull_request:
+    paths:
+      - '.github/workflows/automation-ui-tests.yml'
+      - 'SQL File/**'
+      - 'ofsms/**'
+  workflow_dispatch:
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: ofsmsdb
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+          cache: maven
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: pdo_mysql
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Install MySQL client
+        run: sudo apt-get update && sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL
+        run: |
+          for attempt in {1..30}; do
+            mysqladmin ping -h127.0.0.1 -uroot && exit 0
+            sleep 2
+          done
+          exit 1
+
+      - name: Import database seed
+        run: mysql -h127.0.0.1 -uroot ofsmsdb < "SQL File/ofsmsdb.sql"
+
+      - name: Start PHP application server
+        run: php -S 127.0.0.1:8000 -t ofsms > /tmp/ofsms-php-server.log 2>&1 &
+
+      - name: Run Selenium TestNG suite
+        working-directory: ofsms/automation
+        env:
+          CI: "true"
+        run: mvn -B test -DbaseUrl=http://127.0.0.1:8000/ -Dheadless=true
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: ofsms/automation/target/surefire-reports
+          if-no-files-found: warn
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: ofsms/automation/target/allure-results
+          if-no-files-found: warn
+
+      - name: Upload failure screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: ofsms/automation/target/screenshots
+          if-no-files-found: warn
+
+      - name: Upload PHP server log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-server-log
+          path: /tmp/ofsms-php-server.log
+          if-no-files-found: warn

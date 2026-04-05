@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ofsms-smoke-suite">
+    <listeners>
+        <listener class-name="com.ofsms.tests.TestReportListener"/>
+    </listeners>
+    <test name="ofsms-smoke-tests">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.ofsms.tests"/>
+        </packages>
+    </test>
+</suite>

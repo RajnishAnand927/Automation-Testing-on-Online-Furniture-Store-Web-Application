@@ -1,0 +1,133 @@
+OFSMS Automation - Test Run Cheat Sheet
+
+Project folder:
+C:\xampp\htdocs\Online Furniture Shop Project\ofsms\automation
+
+Before running:
+1. Start XAMPP Apache
+2. Start XAMPP MySQL
+3. Open PowerShell
+4. Go to the automation folder:
+
+cd "C:\xampp\htdocs\Online Furniture Shop Project\ofsms\automation"
+
+
+1. Run Main Suite
+Command:
+mvn test "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs the main TestNG suite from testng.xml
+- This is your normal full project suite
+
+When to use:
+- General test execution
+- End-to-end verification after changes
+
+
+2. Run Full Regression Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-regression.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs the full grouped regression suite
+- Covers all major user and admin flows
+
+When to use:
+- Before final submission
+- Before deployment
+- After major updates
+
+
+3. Run Smoke Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-smoke.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs only the most important core flows
+- Fastest useful confidence check
+
+When to use:
+- Before demos
+- After a small bug fix
+- Quick application health check
+
+
+4. Run User Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-user.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs storefront and customer-side tests only
+- Includes login, cart, checkout, profile, orders, track order, invoice, and user navigation
+
+When to use:
+- When testing customer-facing functionality only
+
+
+5. Run Admin Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-admin.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs admin panel tests only
+- Includes admin login, products, categories, orders, dashboard, and operations
+
+When to use:
+- When testing admin functionality only
+
+
+6. Run Auth Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-auth.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs authentication-related tests only
+- Includes login, logout, forgot password, and negative login tests
+
+When to use:
+- When checking user/admin authentication flows
+
+
+7. Run with Visible Browser and Slow Motion
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-user.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe" -DslowMoMs=1500
+
+What it does:
+- Opens the browser normally
+- Adds delay between steps so actions are easier to watch
+
+When to use:
+- Demos
+- Presentations
+- Training
+
+
+8. Run in Headless Mode
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-smoke.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe" -Dheadless=true
+
+What it does:
+- Runs tests without opening the browser window
+- Faster and useful for background checks
+
+When to use:
+- CI
+- Fast local validation
+- When you do not need to watch the browser
+
+
+Reports generated after run:
+- target\reports\test-summary.txt
+- target\reports\test-summary.pdf
+- target\screenshots
+- target\surefire-reports
+- target\allure-results
+
+
+Recommended usage:
+- Quick check: smoke suite
+- Only user side: user suite
+- Only admin side: admin suite
+- Login or password checks: auth suite
+- Final full validation: regression suite
