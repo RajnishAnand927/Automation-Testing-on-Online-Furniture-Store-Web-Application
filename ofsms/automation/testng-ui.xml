@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ofsms-ui-suite">
+    <listeners>
+        <listener class-name="com.ofsms.tests.TestReportListener"/>
+    </listeners>
+
+    <test name="ofsms-ui-tests">
+        <classes>
+            <class name="com.ofsms.tests.HomeTest"/>
+            <class name="com.ofsms.tests.StaticPagesTest"/>
+            <class name="com.ofsms.tests.UserGuestPagesTest"/>
+            <class name="com.ofsms.tests.UserAuthenticatedPagesTest"/>
+            <class name="com.ofsms.tests.AdminProductsTest"/>
+            <class name="com.ofsms.tests.AdminManagementPagesTest"/>
+            <class name="com.ofsms.tests.AdminOperationsPagesTest"/>
+        </classes>
+    </test>
+</suite>

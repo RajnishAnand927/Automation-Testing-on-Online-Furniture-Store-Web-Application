@@ -89,7 +89,21 @@ When to use:
 - When checking user/admin authentication flows
 
 
-7. Run with Visible Browser and Slow Motion
+7. Run UI Suite
+Command:
+mvn test "-Dsurefire.suiteXmlFiles=testng-ui.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe"
+
+What it does:
+- Runs the complete Selenium UI suite for both storefront and admin pages
+- Uses the existing UI-focused TestNG classes already present in the project
+
+When to use:
+- Full browser-based UI validation
+- After UI changes across user or admin pages
+- Before end-to-end demo or release checks
+
+
+8. Run with Visible Browser and Slow Motion
 Command:
 mvn test "-Dsurefire.suiteXmlFiles=testng-user.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe" -DslowMoMs=1500
 
@@ -103,7 +117,7 @@ When to use:
 - Training
 
 
-8. Run in Headless Mode
+9. Run in Headless Mode
 Command:
 mvn test "-Dsurefire.suiteXmlFiles=testng-smoke.xml" "-Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe" -Dheadless=true
 
